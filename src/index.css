@@ -10,7 +10,7 @@ body {
   @apply m-0 min-h-screen bg-[#05070d] font-sans text-slate-100 antialiased;
   background:
     linear-gradient(rgba(3, 7, 13, 0.42), rgba(3, 7, 13, 0.58)),
-    url('/background.png') center center / cover no-repeat fixed;
+    url('/background-v1.webp') center center / cover no-repeat fixed;
 }
 
 #root {

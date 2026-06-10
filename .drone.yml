@@ -1,0 +1,63 @@
+kind: pipeline
+type: docker
+name: validate
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - tag
+
+steps:
+  - name: install
+    image: node:22-alpine
+    commands:
+      - npm ci --no-audit --no-fund
+
+  - name: lint
+    image: node:22-alpine
+    commands:
+      - npm run lint
+    depends_on:
+      - install
+
+  - name: build-site
+    image: node:22-alpine
+    commands:
+      - npm run build
+    depends_on:
+      - install
+
+  - name: validate-container
+    image: plugins/docker
+    settings:
+      context: .
+      dockerfile: Dockerfile
+      dry_run: true
+      repo: iotapi322/resume
+    depends_on:
+      - lint
+      - build-site
+    when:
+      event:
+        - pull_request
+
+  - name: publish-container
+    image: plugins/docker
+    settings:
+      context: .
+      dockerfile: Dockerfile
+      repo: iotapi322/resume
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: build-${DRONE_BUILD_NUMBER}
+    depends_on:
+      - lint
+      - build-site
+    when:
+      event:
+        - push
+        - tag
