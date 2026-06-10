@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIP — Document Ingestion Pipeline Architecture</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent1: #3b82f6;
+    --accent2: #8b5cf6;
+    --accent3: #06b6d4;
+    --accent4: #10b981;
+    --accent5: #f59e0b;
+    --accent6: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Starfield background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.18) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,.12) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,.14) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 75%, rgba(255,255,255,.10) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 90%, rgba(255,255,255,.13) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,.11) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,.09) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,.15) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ── Header ── */
+  .header { text-align: center; margin-bottom: 56px; }
+  .header .logo {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 2.6rem; font-weight: 800; letter-spacing: -1px;
+  }
+  .header .logo svg { flex-shrink: 0; }
+  .header .subtitle { color: var(--text-dim); font-size: 1.05rem; margin-top: 8px; letter-spacing: .3px; }
+  .header .badges { display: flex; justify-content: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .badge {
+    padding: 4px 12px; border-radius: 999px; font-size: .72rem; font-weight: 600;
+    letter-spacing: .5px; text-transform: uppercase;
+  }
+  .badge-blue  { background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.35); color: #93c5fd; }
+  .badge-purple{ background: rgba(139,92,246,.15);  border: 1px solid rgba(139,92,246,.35); color: #c4b5fd; }
+  .badge-cyan  { background: rgba(6,182,212,.15);   border: 1px solid rgba(6,182,212,.35);  color: #67e8f9; }
+  .badge-green { background: rgba(16,185,129,.15);  border: 1px solid rgba(16,185,129,.35); color: #6ee7b7; }
+  .badge-amber { background: rgba(245,158,11,.15);  border: 1px solid rgba(245,158,11,.35); color: #fcd34d; }
+
+  /* ── Section titles ── */
+  .section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 24px;
+  }
+  .section-title .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+  .section-title .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  /* ── Flow container ── */
+  .flow-section { margin-bottom: 52px; }
+
+  .flow-track {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .flow-track::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.012) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── Node grid ── */
+  .flow-nodes {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .flow-nodes::-webkit-scrollbar { height: 4px; }
+  .flow-nodes::-webkit-scrollbar-track { background: transparent; }
+  .flow-nodes::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── Node ── */
+  .node {
+    flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; min-width: 100px; max-width: 120px;
+    text-align: center;
+  }
+
+  .node-box {
+    width: 82px; height: 72px;
+    border-radius: 14px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px; padding: 8px;
+    position: relative;
+    transition: transform .2s, box-shadow .2s;
+    cursor: default;
+  }
+  .node-box:hover { transform: translateY(-3px); }
+
+  .node-label {
+    font-size: .68rem; font-weight: 600; color: var(--text-dim);
+    line-height: 1.3; text-align: center;
+    max-width: 110px;
+  }
+  .node-sublabel {
+    font-size: .6rem; color: var(--text-muted);
+    line-height: 1.3; text-align: center;
+    max-width: 110px; margin-top: -4px;
+  }
+
+  /* colour variants */
+  .node-blue   .node-box { background: rgba(59,130,246,.12);  border: 1px solid rgba(59,130,246,.4);  box-shadow: 0 0 18px rgba(59,130,246,.15); }
+  .node-purple .node-box { background: rgba(139,92,246,.12);  border: 1px solid rgba(139,92,246,.4);  box-shadow: 0 0 18px rgba(139,92,246,.15); }
+  .node-cyan   .node-box { background: rgba(6,182,212,.12);   border: 1px solid rgba(6,182,212,.4);   box-shadow: 0 0 18px rgba(6,182,212,.15); }
+  .node-green  .node-box { background: rgba(16,185,129,.12);  border: 1px solid rgba(16,185,129,.4);  box-shadow: 0 0 18px rgba(16,185,129,.15); }
+  .node-amber  .node-box { background: rgba(245,158,11,.12);  border: 1px solid rgba(245,158,11,.4);  box-shadow: 0 0 18px rgba(245,158,11,.15); }
+  .node-red    .node-box { background: rgba(239,68,68,.12);   border: 1px solid rgba(239,68,68,.4);   box-shadow: 0 0 18px rgba(239,68,68,.15); }
+  .node-teal   .node-box { background: rgba(20,184,166,.12);  border: 1px solid rgba(20,184,166,.4);  box-shadow: 0 0 18px rgba(20,184,166,.15); }
+
+  .node-blue:hover   .node-box { box-shadow: 0 4px 28px rgba(59,130,246,.4); }
+  .node-purple:hover .node-box { box-shadow: 0 4px 28px rgba(139,92,246,.4); }
+  .node-cyan:hover   .node-box { box-shadow: 0 4px 28px rgba(6,182,212,.4); }
+  .node-green:hover  .node-box { box-shadow: 0 4px 28px rgba(16,185,129,.4); }
+  .node-amber:hover  .node-box { box-shadow: 0 4px 28px rgba(245,158,11,.4); }
+  .node-teal:hover   .node-box { box-shadow: 0 4px 28px rgba(20,184,166,.4); }
+
+  /* icon inside node */
+  .node-icon { font-size: 1.45rem; line-height: 1; }
+  .node-tag {
+    font-size: .55rem; font-weight: 700; letter-spacing: .4px;
+    padding: 1px 5px; border-radius: 4px; text-transform: uppercase;
+  }
+  .tag-blue   { background: rgba(59,130,246,.25);  color: #93c5fd; }
+  .tag-purple { background: rgba(139,92,246,.25);  color: #c4b5fd; }
+  .tag-cyan   { background: rgba(6,182,212,.25);   color: #67e8f9; }
+  .tag-green  { background: rgba(16,185,129,.25);  color: #6ee7b7; }
+  .tag-amber  { background: rgba(245,158,11,.25);  color: #fcd34d; }
+  .tag-teal   { background: rgba(20,184,166,.25);  color: #5eead4; }
+
+  /* ── Animated arrow ── */
+  .arrow {
+    flex-shrink: 0;
+    display: flex; align-items: center;
+    width: 36px; position: relative;
+  }
+  .arrow-line {
+    width: 100%; height: 2px;
+    position: relative; overflow: visible;
+  }
+  .arrow-line::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    top: -3px; right: -1px;
+    width: 0; height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+
+  /* animated pulse dot */
+  .arrow-pulse {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 6px; height: 6px; border-radius: 50%;
+    animation: pulse-travel 1.8s linear infinite;
+  }
+
+  @keyframes pulse-travel {
+    0%   { left: -6px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: calc(100% + 4px); opacity: 0; }
+  }
+
+  .arrow-blue  .arrow-line::before { background: rgba(59,130,246,.5); }
+  .arrow-blue  .arrow-line::after  { border-left: 6px solid rgba(59,130,246,.8); }
+  .arrow-blue  .arrow-pulse        { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+
+  .arrow-purple .arrow-line::before { background: rgba(139,92,246,.5); }
+  .arrow-purple .arrow-line::after  { border-left: 6px solid rgba(139,92,246,.8); }
+  .arrow-purple .arrow-pulse        { background: #8b5cf6; box-shadow: 0 0 6px #8b5cf6; }
+
+  .arrow-cyan  .arrow-line::before { background: rgba(6,182,212,.5); }
+  .arrow-cyan  .arrow-line::after  { border-left: 6px solid rgba(6,182,212,.8); }
+  .arrow-cyan  .arrow-pulse        { background: #06b6d4; box-shadow: 0 0 6px #06b6d4; }
+
+  .arrow-green .arrow-line::before { background: rgba(16,185,129,.5); }
+  .arrow-green .arrow-line::after  { border-left: 6px solid rgba(16,185,129,.8); }
+  .arrow-green .arrow-pulse        { background: #10b981; box-shadow: 0 0 6px #10b981; }
+
+  .arrow-amber .arrow-line::before { background: rgba(245,158,11,.5); }
+  .arrow-amber .arrow-line::after  { border-left: 6px solid rgba(245,158,11,.8); }
+  .arrow-amber .arrow-pulse        { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+
+  /* stagger animation delays */
+  .arrow:nth-child(2)  .arrow-pulse { animation-delay: .0s; }
+  .arrow:nth-child(4)  .arrow-pulse { animation-delay: .25s; }
+  .arrow:nth-child(6)  .arrow-pulse { animation-delay: .5s; }
+  .arrow:nth-child(8)  .arrow-pulse { animation-delay: .75s; }
+  .arrow:nth-child(10) .arrow-pulse { animation-delay: 1.0s; }
+  .arrow:nth-child(12) .arrow-pulse { animation-delay: 1.25s; }
+  .arrow:nth-child(14) .arrow-pulse { animation-delay: 1.5s; }
+  .arrow:nth-child(16) .arrow-pulse { animation-delay: 1.75s; }
+
+  /* ── Fork node (splits into two outputs) ── */
+  .fork-wrap {
+    display: flex; flex-direction: column; gap: 8px; align-items: center;
+    flex-shrink: 0;
+  }
+  .fork-label { font-size: .62rem; color: var(--text-muted); font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+  .fork-row { display: flex; align-items: center; gap: 0; }
+
+  /* ── Dual-output box ── */
+  .dual-outputs {
+    display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: flex-start;
+  }
+  .dual-outputs .node { min-width: 90px; max-width: 104px; }
+
+  /* ── Detail chips under flow ── */
+  .flow-details {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .detail-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 8px;
+    font-size: .68rem; font-weight: 500; color: var(--text-dim);
+    background: var(--surface2); border: 1px solid var(--border);
+  }
+  .detail-chip .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── API section ── */
+  .api-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+  .api-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .api-card-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .api-method {
+    font-size: .72rem; font-weight: 800; padding: 3px 8px;
+    border-radius: 6px; letter-spacing: .5px;
+  }
+  .method-get  { background: rgba(16,185,129,.2);  color: #6ee7b7; }
+  .method-post { background: rgba(59,130,246,.2);  color: #93c5fd; }
+  .api-path { font-size: .9rem; font-weight: 700; color: var(--text); font-family: 'Courier New', monospace; }
+  .api-desc { font-size: .75rem; color: var(--text-muted); margin-left: auto; }
+
+  .api-card-body { padding: 16px 18px; }
+  pre {
+    background: #0d1525;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: .72rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: #94a3b8;
+  }
+  .kw  { color: #93c5fd; }
+  .str { color: #6ee7b7; }
+  .num { color: #fcd34d; }
+  .cmt { color: #475569; font-style: italic; }
+  .resp-label { font-size: .68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin: 10px 0 6px; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; margin-top: 60px; color: var(--text-muted); font-size: .75rem; }
+  .footer a { color: var(--accent1); text-decoration: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .header .logo { font-size: 1.8rem; }
+    .flow-nodes { gap: 0; }
+    .node { min-width: 80px; max-width: 90px; }
+    .node-box { width: 68px; height: 60px; }
+    .node-icon { font-size: 1.2rem; }
+    .arrow { width: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ════ HEADER ════ -->
+  <div class="header">
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#3b82f6"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+          </linearGradient>
+        </defs>
+        <rect width="36" height="36" rx="9" fill="url(#lg1)" opacity=".9"/>
+        <path d="M9 11h7M9 16h12M9 21h9M9 26h5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="26" cy="13" r="5" fill="none" stroke="white" stroke-width="1.8"/>
+        <path d="M29.5 16.5L32 19" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      DIP
+    </div>
+    <div class="subtitle">Document Ingestion Pipeline — Architecture Overview</div>
+    <div class="badges">
+      <span class="badge badge-blue">FastAPI</span>
+      <span class="badge badge-purple">Qdrant Vector DB</span>
+      <span class="badge badge-cyan">SQLite FTS5</span>
+      <span class="badge badge-green">bge-small-en-v1.5</span>
+      <span class="badge badge-amber">Cross-Encoder Reranker</span>
+    </div>
+  </div>
+
+  <!-- ════ INGESTION FLOW ════ -->
+  <div class="flow-section">
+    <div class="section-title">
+      <span class="dot" style="color:#3b82f6;background:#3b82f6"></span>
+      Ingestion Pipeline
+      <span class="line"></span>
+    </div>
+
+    <div class="flow-track">
+      <div class="flow-nodes">
+
+        <!-- Source docs -->
+        <div class="node node-blue">
+          <div class="node-box">
+            <div class="node-icon">📁</div>
+            <div class="node-tag tag-blue">Input</div>
+          </div>
+          <div class="node-label">Source Documents</div>
+          <div class="node-sublabel">PDF · DOC/DOCX · XLS/XLSX · PPT/PPTX · CSV · TXT</div>
+        </div>
+
+        <div class="arrow arrow-blue"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- File scanner -->
+        <div class="node node-blue">
+          <div class="node-box">
+            <div class="node-icon">🔍</div>
+            <div class="node-tag tag-blue">Scan</div>
+          </div>
+          <div class="node-label">File Scanner</div>
+          <div class="node-sublabel">SOURCE_ROOTS · junk filters · SHA256 change detection</div>
+        </div>
+
+        <div class="arrow arrow-blue"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Workers -->
+        <div class="node node-purple">
+          <div class="node-box">
+            <div class="node-icon">⚙️</div>
+            <div class="node-tag tag-purple">Convert</div>
+          </div>
+          <div class="node-label">Parallel Workers</div>
+          <div class="node-sublabel">Native readers + MarkItDown + LibreOffice process timeouts</div>
+        </div>
+
+        <div class="arrow arrow-purple"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Chunker -->
+        <div class="node node-purple">
+          <div class="node-box">
+            <div class="node-icon">✂️</div>
+            <div class="node-tag tag-purple">Chunk</div>
+          </div>
+          <div class="node-label">Sentence Chunker</div>
+          <div class="node-sublabel">900 tok · 150 overlap sentence-aware</div>
+        </div>
+
+        <div class="arrow arrow-cyan"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Embedder -->
+        <div class="node node-cyan">
+          <div class="node-box">
+            <div class="node-icon">🧠</div>
+            <div class="node-tag tag-cyan">Embed</div>
+          </div>
+          <div class="node-label">Batch Embedder</div>
+          <div class="node-sublabel">bge-small-en-v1.5 batched vectors</div>
+        </div>
+
+        <div class="arrow arrow-cyan"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Storage outputs -->
+        <div class="dual-outputs">
+          <div class="node node-green" style="max-width:110px">
+            <div class="node-box">
+              <div class="node-icon">🗄️</div>
+              <div class="node-tag tag-green">Vector</div>
+            </div>
+            <div class="node-label">Qdrant</div>
+            <div class="node-sublabel">Cosine similarity</div>
+          </div>
+          <div class="node node-amber" style="max-width:110px">
+            <div class="node-box">
+              <div class="node-icon">📋</div>
+              <div class="node-tag tag-amber">State</div>
+            </div>
+            <div class="node-label">SQLite Registry</div>
+            <div class="node-sublabel">documents · chunks · FTS5 · runs</div>
+          </div>
+        </div>
+
+      </div><!-- /flow-nodes -->
+
+      <div class="flow-details">
+        <div class="detail-chip"><span class="dot" style="background:#3b82f6"></span> SHA256 dedup — identical files indexed once</div>
+        <div class="detail-chip"><span class="dot" style="background:#8b5cf6"></span> process workers — hard per-file timeout protection</div>
+        <div class="detail-chip"><span class="dot" style="background:#06b6d4"></span> Embed batch default = 16 chunks per call</div>
+        <div class="detail-chip"><span class="dot" style="background:#10b981"></span> Timer runs every 30 min automatically</div>
+        <div class="detail-chip"><span class="dot" style="background:#f59e0b"></span> LibreOffice fallback for legacy Office and failed native conversions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ QUERY FLOW ════ -->
+  <div class="flow-section">
+    <div class="section-title">
+      <span class="dot" style="color:#8b5cf6;background:#8b5cf6"></span>
+      Query &amp; Retrieval Pipeline
+      <span class="line"></span>
+    </div>
+
+    <div class="flow-track">
+      <div class="flow-nodes">
+
+        <!-- User query -->
+        <div class="node node-purple">
+          <div class="node-box">
+            <div class="node-icon">💬</div>
+            <div class="node-tag tag-purple">Input</div>
+          </div>
+          <div class="node-label">User Query</div>
+          <div class="node-sublabel">/search or /ask</div>
+        </div>
+
+        <div class="arrow arrow-purple"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Query embedding -->
+        <div class="node node-amber">
+          <div class="node-box">
+            <div class="node-icon">🧠</div>
+            <div class="node-tag tag-amber">Embed</div>
+          </div>
+          <div class="node-label">Query Embedder</div>
+          <div class="node-sublabel">Vector mode and hybrid mode only</div>
+        </div>
+
+        <div class="arrow arrow-amber"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Hybrid search -->
+        <div class="node node-cyan">
+          <div class="node-box">
+            <div class="node-icon">🔀</div>
+            <div class="node-tag tag-cyan">Hybrid</div>
+          </div>
+          <div class="node-label">Hybrid Search</div>
+          <div class="node-sublabel">Vector Qdrant + SQLite FTS5 OR query</div>
+        </div>
+
+        <div class="arrow arrow-cyan"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- RRF -->
+        <div class="node node-cyan">
+          <div class="node-box">
+            <div class="node-icon">⚖️</div>
+            <div class="node-tag tag-cyan">Fuse</div>
+          </div>
+          <div class="node-label">RRF Fusion</div>
+          <div class="node-sublabel">k=60 reciprocal rank</div>
+        </div>
+
+        <div class="arrow arrow-purple"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Dedup -->
+        <div class="node node-purple">
+          <div class="node-box">
+            <div class="node-icon">🧹</div>
+            <div class="node-tag tag-purple">Dedup</div>
+          </div>
+          <div class="node-label">Chunk Dedup</div>
+          <div class="node-sublabel">chunk_id and SHA chunk index</div>
+        </div>
+
+        <div class="arrow arrow-amber"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Reranker -->
+        <div class="node node-amber">
+          <div class="node-box">
+            <div class="node-icon">🏆</div>
+            <div class="node-tag tag-amber">Rerank</div>
+          </div>
+          <div class="node-label">Cross-Encoder</div>
+          <div class="node-sublabel">ms-marco-MiniLM candidates default 50</div>
+        </div>
+
+        <div class="arrow arrow-green"><div class="arrow-line"><div class="arrow-pulse"></div></div></div>
+
+        <!-- Dual output -->
+        <div class="dual-outputs">
+          <div class="node node-green" style="max-width:110px">
+            <div class="node-box">
+              <div class="node-icon">📊</div>
+              <div class="node-tag tag-green">/search</div>
+            </div>
+            <div class="node-label">Ranked Results</div>
+            <div class="node-sublabel">JSON with scores</div>
+          </div>
+          <div class="node node-teal" style="max-width:110px">
+            <div class="node-box">
+              <div class="node-icon">🤖</div>
+              <div class="node-tag tag-teal">/ask</div>
+            </div>
+            <div class="node-label">LLM Answer</div>
+            <div class="node-sublabel">Cited evidence synthesis</div>
+          </div>
+        </div>
+
+      </div><!-- /flow-nodes -->
+
+      <div class="flow-details">
+        <div class="detail-chip"><span class="dot" style="background:#f59e0b"></span> Modes — vector, keyword, or hybrid via request body or SEARCH_MODE</div>
+        <div class="detail-chip"><span class="dot" style="background:#06b6d4"></span> RRF k=60 — combines vector and keyword ranks in hybrid mode</div>
+        <div class="detail-chip"><span class="dot" style="background:#8b5cf6"></span> /ask evidence threshold defaults to ASK_MIN_RERANK_SCORE=-5.0</div>
+        <div class="detail-chip"><span class="dot" style="background:#10b981"></span> Works with any OpenAI-compatible LLM endpoint</div>
+        <div class="detail-chip"><span class="dot" style="background:#3b82f6"></span> Request telemetry is stored in SQLite and exposed through /metrics</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-section">
+    <div class="section-title">
+      <span class="dot" style="color:#06b6d4;background:#06b6d4"></span>
+      Runtime Components
+      <span class="line"></span>
+    </div>
+
+    <div class="flow-track">
+      <div class="flow-details" style="margin-top:0;padding-top:0;border-top:0">
+        <div class="detail-chip"><span class="dot" style="background:#3b82f6"></span> FastAPI service runs from /opt/dip and serves /health, /search, /ask, and /metrics on port 8080</div>
+        <div class="detail-chip"><span class="dot" style="background:#10b981"></span> Qdrant container persists vectors under /var/lib/dip/qdrant-storage</div>
+        <div class="detail-chip"><span class="dot" style="background:#f59e0b"></span> SQLite registry lives under /var/lib/dip/state/registry.sqlite3 with WAL enabled</div>
+        <div class="detail-chip"><span class="dot" style="background:#8b5cf6"></span> Markdown cache is written under /var/lib/dip/markdown by content SHA</div>
+        <div class="detail-chip"><span class="dot" style="background:#06b6d4"></span> systemd timer launches incremental ingestion every 30 minutes</div>
+        <div class="detail-chip"><span class="dot" style="background:#ef4444"></span> OCR is not enabled; scanned PDFs and images remain a future phase</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ API REFERENCE ════ -->
+  <div class="flow-section">
+    <div class="section-title">
+      <span class="dot" style="color:#10b981;background:#10b981"></span>
+      API Endpoints — How to Use
+      <span class="line"></span>
+    </div>
+
+    <div class="api-grid">
+
+      <!-- /health -->
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-method method-get">GET</span>
+          <span class="api-path">/health</span>
+          <span class="api-desc">System status</span>
+        </div>
+        <div class="api-card-body">
+          <pre><span class="cmt"># Check system status</span>
+<span class="kw">curl</span> http://ragdb:8080/health</pre>
+          <div class="resp-label">Response</div>
+          <pre>{
+  <span class="str">"status"</span>: <span class="str">"ok"</span>,
+  <span class="str">"collection"</span>: <span class="str">"business_docs"</span>,
+  <span class="str">"rerank_enabled"</span>: <span class="kw">true</span>,
+  <span class="str">"search_mode"</span>: <span class="str">"hybrid"</span>,
+  <span class="str">"llm_configured"</span>: <span class="kw">true</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- /search -->
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-method method-post">POST</span>
+          <span class="api-path">/search</span>
+          <span class="api-desc">Semantic search</span>
+        </div>
+        <div class="api-card-body">
+          <pre><span class="kw">curl</span> http://ragdb:8080/search \
+  -H <span class="str">'content-type: application/json'</span> \
+  -d <span class="str">'{
+    "query": "commissioning report",
+    "top_k": 5,
+    "use_rerank": true,
+    "mode": "hybrid"
+  }'</span></pre>
+          <div class="resp-label">Response</div>
+          <pre>{
+  <span class="str">"results"</span>: [{
+    <span class="str">"chunk_id"</span>: <span class="str">"abc123:000002"</span>,
+    <span class="str">"file_name"</span>: <span class="str">"CommPlan.pdf"</span>,
+    <span class="str">"section_title"</span>: <span class="str">"Requirements"</span>,
+    <span class="str">"score"</span>: <span class="num">4.21</span>,
+    <span class="str">"text"</span>: <span class="str">"..."</span>
+  }],
+  <span class="str">"reranked"</span>: <span class="kw">true</span>,
+  <span class="str">"mode"</span>: <span class="str">"hybrid"</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- /ask -->
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-method method-post">POST</span>
+          <span class="api-path">/ask</span>
+          <span class="api-desc">Grounded Q&amp;A</span>
+        </div>
+        <div class="api-card-body">
+          <pre><span class="kw">curl</span> http://ragdb:8080/ask \
+  -H <span class="str">'content-type: application/json'</span> \
+  -d <span class="str">'{
+    "question": "What does the
+      commissioning plan require?",
+    "top_k": 8,
+    "use_rerank": true
+  }'</span></pre>
+          <div class="resp-label">Response</div>
+          <pre>{
+  <span class="str">"answer"</span>: <span class="str">"The plan requires... [1]"</span>,
+  <span class="str">"citations"</span>: [{
+    <span class="str">"citation_id"</span>: <span class="num">1</span>,
+    <span class="str">"source_path"</span>: <span class="str">"/data/..."</span>,
+    <span class="str">"section_title"</span>: <span class="str">"Requirements"</span>,
+    <span class="str">"rerank_score"</span>: <span class="num">4.21</span>
+  }],
+  <span class="str">"confidence"</span>: <span class="str">"high"</span>,
+  <span class="str">"llm_used"</span>: <span class="kw">true</span>
+}</pre>
+        </div>
+      </div>
+
+    </div><!-- /api-grid -->
+  </div>
+
+  <!-- ════ FOOTER ════ -->
+  <div class="footer">
+    DIP — Document Ingestion Pipeline &nbsp;·&nbsp;
+    Qdrant + SQLite FTS5 + sentence-transformers + FastAPI
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
