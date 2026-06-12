@@ -348,6 +348,12 @@ const earlyCareerHighlights = [
   'Hands-on background across C/C++, Python, JavaScript, Golang, GNU make/autotools, and infrastructure automation tooling.',
 ]
 
+const heroProofPoints = [
+  'Built production infrastructure that teams depended on for years without major redesign.',
+  'Turned high-friction secure operations into automation, including a 20+ step FedRAMP workflow.',
+  'Bridge deep embedded systems experience with modern platform engineering, observability, and practical AI.',
+]
+
 const independentProjects = [
   {
     period: 'Independent Technical Projects',
@@ -410,14 +416,28 @@ function App() {
         <section className="glass-card p-6 sm:p-8">
           <p className="font-mono text-xs uppercase tracking-[0.28em] text-cyan-300/90">Infrastructure Command Profile</p>
           <h1 className="mt-3 text-3xl font-extrabold text-white sm:text-5xl">Matt Snoby</h1>
-          <p className="mt-2 text-lg font-semibold text-sky-200">Cloud Infrastructure & Platform Engineering Technical Leader</p>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-200 sm:text-base">
-            Dynamic Puzzle Solver tinkerer and Cloud Infrastructure technical leader with 20+ years across Cisco/Webex platform
-            systems, Codex automation, Drone CI/CD, Terraform Enterprise, HashiCorp Vault, Splunk, secure Kubernetes image
-            pipelines, and GitHub Actions advisory work. Also a crypto mining pool operator and crypto miner developer with
-            hands-on depth in Linux systems, Linux kernel driver development, embedded hardware bring-up, observability,
-            PostgreSQL-backed infrastructure, and production reliability.
+          <p className="mt-2 text-lg font-semibold text-sky-200 sm:text-xl">
+            I build critical infrastructure that quietly keeps working.
           </p>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-100 sm:text-lg">
+            Platform engineering technical leader with 20+ years spanning Cisco/Webex, secure CI/CD, Kubernetes, Vault,
+            observability, production databases, and AI-assisted automation. The through-line is durable systems: the kind that
+            reduce toil, survive production pressure, and do not need constant babysitting.
+          </p>
+          <div className="mt-5 grid gap-3 lg:grid-cols-3">
+            {heroProofPoints.map((item) => (
+              <p key={item} className="glass-subcard p-3 text-sm leading-relaxed text-slate-200">
+                {item}
+              </p>
+            ))}
+          </div>
+          <div className="mt-5 max-w-3xl rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200/90">Why Teams Remember Me</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-100 sm:text-base">
+              I am usually handed the systems that need to be reliable, secure, and low-maintenance. My best work is building
+              the infrastructure that runs in the corner and just keeps doing its job.
+            </p>
+          </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="#resume"
