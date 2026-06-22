@@ -11,6 +11,26 @@ npm ci
 npm run dev
 ```
 
+To test the resume chatbot against the FastAPI backend running at `http://10.0.0.85:8000`:
+
+```bash
+npm run dev:local-api
+```
+
+That starts Vite with the resume API base URL already pointed at your backend.
+
+To build and run the Docker version locally against the same backend:
+
+```bash
+./scripts/run-local-docker.sh
+```
+
+Optional overrides:
+
+```bash
+API_BASE_URL=http://10.0.0.85:8000 HOST_PORT=8081 ./scripts/run-local-docker.sh
+```
+
 ## Production container
 
 Build and start the site:
