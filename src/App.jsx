@@ -523,7 +523,7 @@ function App() {
             <button
               type="button"
               onClick={() => setIsChatOpen(true)}
-              className="rounded-lg border border-emerald-300/35 bg-emerald-300/12 px-4 py-2 font-mono text-xs uppercase tracking-wider text-emerald-100 transition hover:bg-emerald-300/20"
+              className="ask-ai-hero-button rounded-lg px-4 py-2 font-mono text-xs uppercase tracking-wider transition"
             >
               Ask AI About Matt
             </button>

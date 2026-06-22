@@ -143,3 +143,36 @@ body {
   background-size: 38px 38px;
   mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
 }
+
+@keyframes ask-ai-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(248, 113, 113, 0.28),
+      0 0 14px rgba(239, 68, 68, 0.2),
+      0 0 28px rgba(239, 68, 68, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(248, 113, 113, 0.45),
+      0 0 24px rgba(239, 68, 68, 0.42),
+      0 0 52px rgba(239, 68, 68, 0.22);
+  }
+}
+
+.ask-ai-hero-button {
+  color: rgb(254 202 202);
+  background: linear-gradient(180deg, rgba(127, 29, 29, 0.32), rgba(69, 10, 10, 0.2));
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.35);
+  animation: ask-ai-pulse 2.2s ease-in-out infinite;
+}
+
+.ask-ai-hero-button:hover {
+  background: linear-gradient(180deg, rgba(153, 27, 27, 0.42), rgba(87, 13, 13, 0.28));
+}
+
+.ask-ai-hero-button:focus-visible {
+  outline: 2px solid rgba(252, 165, 165, 0.8);
+  outline-offset: 3px;
+}
