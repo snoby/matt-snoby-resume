@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import GpuBackground from './GpuBackground.jsx'
+import ResumeChat from './ResumeChat.jsx'
 
 const ciscoImpactStats = [
   {
@@ -354,6 +355,73 @@ const heroProofPoints = [
   'Bridge deep embedded systems experience with modern platform engineering, observability, and practical AI.',
 ]
 
+const roleTargets = [
+  {
+    title: 'Staff / Principal Platform Engineering',
+    detail: 'For teams that need reliable CI/CD, Kubernetes, secrets, and operational systems that keep working without constant rewrites.',
+  },
+  {
+    title: 'Infrastructure Reliability / SRE Leadership',
+    detail: 'For environments where observability, incident pressure, and boring reliability matter more than flashy architecture diagrams.',
+  },
+  {
+    title: 'Applied AI for Internal Engineering',
+    detail: 'For organizations that want practical AI automation around runbooks, docs, and repetitive ops without treating AI like magic.',
+  },
+]
+
+const proofArtifacts = [
+  {
+    title: 'DIP Architecture',
+    summary: 'A concrete system design artifact covering ingestion, chunking, embeddings, hybrid retrieval, cited answers, and operations.',
+    href: '/dip-architecture.html',
+    label: 'Open Architecture',
+  },
+  {
+    title: 'Resume Package',
+    summary: 'Traditional resume formats for recruiters who want the direct PDF or Word handoff after the proof-of-work pass.',
+    href: '/Matthew-Snoby-Resume.pdf',
+    label: 'Open PDF Resume',
+  },
+  {
+    title: 'Public Engineering Talk',
+    summary: 'An external signal that the work was visible enough to present publicly as a Cisco engineering representative.',
+    href: 'https://youtu.be/dJqCbTfKrMk?si=m_4kYiEDNneQxOyq',
+    label: 'Watch Talk',
+  },
+  {
+    title: 'Cuckoo Miner Article',
+    summary: 'A LinkedIn writeup connected to the world-fastest Cuckoo CPU miner work, showing low-level performance tuning and independent systems experimentation.',
+    href: 'https://www.linkedin.com/pulse/how-i-built-worlds-fastest-cpu-cuckoo-cycle-miner-what-matt-snoby-zeabc/',
+    label: 'Read Article',
+  },
+]
+
+const writingHighlights = [
+  {
+    title: 'How AI Enabled a Computer Engineer to Install a Home Solar System',
+    summary:
+      'A practical writeup showing how AI was used as an engineering copilot in a real-world physical system project rather than as a toy demo.',
+    angle: 'Applied AI, systems thinking, and hands-on execution outside traditional software-only work.',
+    href: 'https://www.linkedin.com/pulse/how-ai-enabled-computer-engineer-install-home-solar-system-matt-snoby-jgzoe/?trackingId=cpydaxv%2FJ%2BXDHCbtt4vqxQ%3D%3D',
+    label: 'Read Solar + AI Article',
+  },
+  {
+    title: "World's Fastest Cuckoo CPU Miner",
+    summary:
+      'An article tied to performance engineering work across Ryzen and EPYC systems, including affinity, NUMA tuning, compiler work, and benchmark-driven optimization.',
+    angle: 'Useful proof that the low-level systems background is still active, not just historical resume material.',
+    href: 'https://www.linkedin.com/pulse/how-i-built-worlds-fastest-cpu-cuckoo-cycle-miner-what-matt-snoby-zeabc/',
+    label: 'Read Performance Article',
+  },
+]
+
+const recruiterPath = [
+  'Scan the top cards for the operating domains: CI/CD, Vault, platform hardening, observability, AI-assisted operations, and PostgreSQL reliability.',
+  'Open a detail card to see actual work performed, not just keyword lists. Each card is written as evidence, scope, and operational outcome.',
+  'Use the artifact links and resume download when you need a shareable handoff for a hiring loop or recruiter packet.',
+]
+
 const independentProjects = [
   {
     period: 'Independent Technical Projects',
@@ -369,7 +437,7 @@ const independentProjects = [
     links: [
       {
         label: 'Read the LinkedIn article',
-        href: 'https://www.linkedin.com/posts/activity-7447046008766656512-iTnI?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAIDC_MB0o2CMCkZMqKomzZaBT4C1oRztvo',
+        href: 'https://www.linkedin.com/pulse/how-i-built-worlds-fastest-cpu-cuckoo-cycle-miner-what-matt-snoby-zeabc/',
       },
     ],
   },
@@ -384,6 +452,7 @@ const independentProjects = [
 function App() {
   const [pressedCard, setPressedCard] = useState(null)
   const [selectedCard, setSelectedCard] = useState(ciscoImpactStats[0])
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const pressTimeoutRef = useRef(null)
 
   useEffect(() => {
@@ -451,7 +520,46 @@ function App() {
             >
               Contact
             </a>
+            <button
+              type="button"
+              onClick={() => setIsChatOpen(true)}
+              className="rounded-lg border border-emerald-300/35 bg-emerald-300/12 px-4 py-2 font-mono text-xs uppercase tracking-wider text-emerald-100 transition hover:bg-emerald-300/20"
+            >
+              Ask AI About Matt
+            </button>
           </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <article className="glass-card p-6 sm:p-8">
+            <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Who This Is For</h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+              This page is designed for hiring managers who want proof of operating range quickly: what I build, where I have
+              carried production responsibility, and which problems I can likely solve for their team.
+            </p>
+            <div className="mt-4 space-y-3">
+              {roleTargets.map((item) => (
+                <article key={item.title} className="glass-subcard p-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.detail}</p>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className="glass-card p-6 sm:p-8">
+            <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Fastest Way To Read This</h2>
+            <div className="mt-4 space-y-3">
+              {recruiterPath.map((item, index) => (
+                <div key={item} className="glass-subcard flex gap-3 p-4">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cyan-300/30 bg-cyan-300/10 font-mono text-xs text-cyan-100">
+                    {index + 1}
+                  </span>
+                  <p className="text-sm leading-relaxed text-slate-300">{item}</p>
+                </div>
+              ))}
+            </div>
+          </article>
         </section>
 
         <section className="space-y-3">
@@ -553,6 +661,55 @@ function App() {
             </div>
           </section>
         ) : null}
+
+        <section className="glass-card p-6 sm:p-8">
+          <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Proof Of Work</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+            A resume tells you where I have been. These links show how I think, what I build, and the kinds of systems evidence
+            I can put in front of a team.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {proofArtifacts.map((artifact) => (
+              <article key={artifact.title} className="glass-subcard p-4">
+                <h3 className="text-base font-semibold text-white">{artifact.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{artifact.summary}</p>
+                <a
+                  href={artifact.href}
+                  target={artifact.href.startsWith('http') ? '_blank' : undefined}
+                  rel={artifact.href.startsWith('http') ? 'noreferrer' : undefined}
+                  className="mt-4 inline-flex rounded-md border border-cyan-300/30 bg-cyan-300/15 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/25"
+                >
+                  {artifact.label}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="glass-card p-6 sm:p-8">
+          <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Selected Writing</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+            These articles help show how I explain technical work in public, how I think through systems problems, and what kinds
+            of projects I pursue when I am not writing a traditional resume bullet.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {writingHighlights.map((article) => (
+              <article key={article.title} className="glass-subcard p-4">
+                <h3 className="text-base font-semibold text-white">{article.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{article.summary}</p>
+                <p className="mt-3 text-sm leading-relaxed text-cyan-100/85">{article.angle}</p>
+                <a
+                  href={article.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex rounded-md border border-cyan-300/30 bg-cyan-300/15 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/25"
+                >
+                  {article.label}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <section className="glass-card p-6 sm:p-8">
           <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Core Strengths</h2>
@@ -751,6 +908,16 @@ function App() {
           </p>
         </section>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-4 right-4 z-40 rounded-full border border-cyan-300/35 bg-slate-950/80 px-4 py-3 font-mono text-xs uppercase tracking-[0.2em] text-cyan-100 shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur md:bottom-6 md:right-6"
+      >
+        Ask AI
+      </button>
+
+      <ResumeChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </main>
   )
 }
