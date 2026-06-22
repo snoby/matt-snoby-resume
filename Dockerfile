@@ -20,9 +20,14 @@ RUN find /app/dist -type f \( \
 
 FROM nginxinc/nginx-unprivileged:1.29-alpine AS runtime
 
+USER root
+
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY --chmod=755 docker/40-write-runtime-config.sh /docker-entrypoint.d/40-write-runtime-config.sh
+COPY docker/40-write-runtime-config.sh /docker-entrypoint.d/40-write-runtime-config.sh
+RUN chmod 755 /docker-entrypoint.d/40-write-runtime-config.sh
+
+USER 101
 
 EXPOSE 8080
 
