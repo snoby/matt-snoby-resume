@@ -188,6 +188,10 @@ function ResumeChat({ isOpen, onClose }) {
             {isTyping ? (
               <div className="flex justify-start">
                 <div className="max-w-[88%] rounded-2xl rounded-bl-md bg-white/8 px-4 py-3 text-sm leading-relaxed text-slate-100">
+                  <div className="mb-3 flex items-center gap-2 border-b border-white/10 pb-3">
+                    <span className="chat-thinking-spinner" aria-hidden="true" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/90">Thinking</span>
+                  </div>
                   <p className="whitespace-pre-wrap">
                     {displayedResponse}
                     <span className="ml-1 inline-block h-4 w-2 animate-pulse bg-cyan-300 align-[-2px]" />

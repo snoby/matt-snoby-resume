@@ -89,7 +89,7 @@ const technicalFocusStats = [
     value: 'Qwen3.6 35B',
     note: 'Local llama.cpp serving with MTP, GGUF, and turboquant',
     detail:
-      'Run local LLM serving stacks for private engineering workflows, with attention to long context, speculative decoding, quantization tradeoffs, and reproducible model launch configuration.',
+      'Run local LLM serving stacks for private engineering workflows, agentic tooling experiments, and AI-native development patterns, with attention to long context, speculative decoding, quantization tradeoffs, and reproducible model launch configuration.',
     points: [
       'Serve Qwen3.6 35B locally through llama.cpp using GGUF model artifacts and a coding-focused model alias.',
       'Use MTP speculative decoding with draft token controls to improve local serving behavior while preserving reasoning output.',
@@ -181,14 +181,14 @@ const projects = [
   {
     title: 'Cisco / Webex Platform Engineering',
     summary:
-      'Led critical platform engineering work across internal Kubernetes, AWS automation, CI/CD, secrets management, secure build infrastructure, and modernization of engineering systems used by Webex teams.',
-    stack: 'Kubernetes, AWS, KOPS, Ansible, Vault, CI/CD, GitOps, secure build systems',
+      'Led critical platform engineering work across internal Kubernetes, AWS automation, CI/CD, secrets management, secure build infrastructure, FedRAMP support, and modernization of engineering systems used by Webex teams.',
+    stack: 'Kubernetes, AWS, KOPS, Ansible, Vault, CI/CD, GitOps, secure build systems, FedRAMP',
   },
   {
     title: 'AI Infrastructure & Local LLM Systems Lab',
     summary:
-      'Built private AI-assisted engineering workflows around local inference, retrieval experiments, model comparison, and failure analysis instead of sending sensitive engineering context to public tools.',
-    stack: 'RTX 3090, GGUF, Qwen 3.x, llama.cpp-style runtimes, RAG pipeline components, eval prompts',
+      'Built private AI-assisted engineering workflows around local inference, retrieval experiments, model comparison, agentic automation, and failure analysis instead of sending sensitive engineering context to public tools.',
+    stack: 'RTX 3090/5090, GGUF, Qwen 3.x, llama.cpp-style runtimes, RAG pipeline components, agentic workflows, eval prompts',
   },
   {
     title: 'Observability Platform: Vector.dev -> Loki + Prometheus/Grafana',
@@ -217,18 +217,40 @@ const projects = [
 ]
 
 const skills = {
-  'Cloud / Platform': ['AWS', 'OpenStack', 'Kubernetes (KOPS)', 'Terraform', 'Ansible', 'Vault', 'Hardened Linux images'],
-  'CI/CD / Developer Platforms': ['Drone CI', 'GitHub Actions', 'Jenkins', 'CircleCI', 'GitOps workflows', 'Secure build infrastructure'],
-  Observability: ['Prometheus', 'Grafana', 'Loki', 'Vector.dev', 'Alertmanager', 'Custom metrics and logging pipelines'],
-  Databases: ['PostgreSQL', 'Partitioned tables', 'Replication', 'Query optimization', 'Backup/restore workflows'],
+  'Cloud / Platform': [
+    'AWS (EC2, S3, Route53, IAM, MSK)',
+    'OpenStack',
+    'Kubernetes (KOPS)',
+    'Terraform',
+    'Ansible',
+    'Vault',
+    'Hardened Linux images',
+    'FedRAMP support',
+  ],
+  'CI/CD / Developer Platforms': [
+    'Drone CI',
+    'GitHub Actions',
+    'Jenkins',
+    'CircleCI',
+    'Spinnaker',
+    'ArgoCD',
+    'GitOps workflows',
+    'Secure build infrastructure',
+  ],
+  Observability: ['Prometheus', 'Grafana', 'Loki', 'Vector.dev', 'OTEL', 'Alertmanager', 'Custom metrics and logging pipelines'],
+  Databases: ['PostgreSQL', 'SQLite FTS5', 'Qdrant', 'MongoDB', 'Oracle', 'Partitioned tables', 'Replication', 'Backup/restore workflows'],
   'Networking / Infrastructure': ['HAProxy', 'Nginx', 'Cloudflare', 'DNS', 'VLAN segmentation', 'Mellanox 40Gb Ethernet'],
-  'Systems / Embedded': ['C/C++', 'Linux kernel drivers', 'DOCSIS', 'DRM / Conditional Access', 'BSP bring-up', 'DMA'],
+  'Systems / Embedded': ['C/C++', 'Python', 'JavaScript', 'Go', 'Java', 'Linux kernel drivers', 'DOCSIS', 'DRM / Conditional Access', 'BSP bring-up', 'DMA'],
   'AI / Compute': [
     'Local LLM inference',
+    'Agentic agent design',
+    'AI-native development',
+    'Spec-driven development',
     'GGUF quantization',
     'Qwen 3.x models',
     'Prompt and context design',
     'RAG pipeline experiments',
+    'MCP',
     'Model behavior evaluation',
   ],
 }
@@ -238,7 +260,7 @@ const experiencePrimary = [
     period: 'September 2010 - Present',
     role: 'Cisco / Webex - Cloud Engineering Technical Leader',
     detail:
-      'Technical leader spanning embedded platform architecture, DRM/security systems, cloud platform engineering, and current AI-assisted infrastructure work across Kubernetes, AWS, CI/CD, secrets management, document retrieval, and internal developer platforms.',
+      'Technical leader spanning embedded platform architecture, DRM/security systems, cloud platform engineering, and current AI-assisted infrastructure work across Kubernetes, AWS, CI/CD, secrets management, document retrieval, internal developer platforms, and AI-enabled operations.',
     bullets: [
       'Designed, built, deployed, and service DIP, a document ingestion and retrieval platform that converts mixed office documents into searchable, cited engineering knowledge through FastAPI.',
       'Authored the DIP architecture covering parallel conversion, SHA256 deduplication, sentence-aware chunking, batched embeddings, Qdrant vector storage, and SQLite FTS5 document state and keyword indexing.',
@@ -246,6 +268,7 @@ const experiencePrimary = [
       'Operationalized DIP with persistent storage, health and metrics endpoints, request telemetry, failure retry workflows, and systemd-driven incremental ingestion every 30 minutes.',
       'Built Codex automations for FedRAMP-secure Kubernetes image update workflows, reducing a 20+ step GitOps/JIRA/MFA-heavy process to enabling the automation and confirming MFA.',
       'Used Codex for on-call paging triage: when a page came in, Codex reviewed the runbook, searched docs, logged into the paging cluster, attempted to find the exact error and solution, then presented resolution steps.',
+      'Applied AI-assisted workflows to incident diagnosis, operational research, and auto-remediation experiments while keeping human verification in the loop.',
       'Designed, implemented, and deployed the drone.io CI/CD build system and Terraform Enterprise service used by Webex Logging Metrics for mission-critical builds and production deploys.',
       'Integrated CI/CD and infrastructure automation with HashiCorp Vault so build and deploy secrets stayed secured.',
       'Designed and implemented a HashiCorp Vault hierarchy for CI, development, staging, and production secrets, including hand-written roles and policies before AI-assisted generation.',
@@ -316,7 +339,7 @@ const coreStrengths = [
   'Modernize legacy platforms without disrupting live engineering workflows.',
   'Design automation that reduces toil and improves deployment consistency.',
   'Build observability systems that make distributed infrastructure diagnosable.',
-  'Use AI as an engineering accelerator with private context, verification loops, and clear boundaries.',
+  'Use AI as an engineering accelerator with private context, agentic workflows, verification loops, and clear boundaries.',
   'Bridge enterprise platform engineering with deep embedded Linux and hardware integration experience.',
 ]
 
@@ -324,35 +347,35 @@ const aiOperatingModel = [
   {
     title: 'Private Engineering Assistant',
     detail:
-      'Use local LLM inference to review logs, configs, runbooks, and code-adjacent notes without exposing proprietary or operational context to external chat tools.',
+      'Use local LLM inference to review logs, configs, runbooks, and code-adjacent notes without exposing proprietary or operational context to external chat tools, then shape that into practical engineering decisions.',
   },
   {
     title: 'RAG and Context Experiments',
     detail:
-      'Prototype retrieval flows for infrastructure documentation and incident notes, then test whether retrieved context improves answers or introduces failure modes.',
+      'Prototype retrieval flows for infrastructure documentation and incident notes, then test whether retrieved context improves answers or introduces failure modes across RAG, MCP, and cited-answer workflows.',
   },
   {
     title: 'Model and Prompt Evaluation',
     detail:
-      'Compare model behavior across quantization levels, context length, latency, and answer quality; keep useful prompts only when they survive real engineering tasks.',
+      'Compare model behavior across quantization levels, context length, latency, and answer quality; keep useful prompts and specs only when they survive real engineering tasks.',
   },
   {
     title: 'Human-in-the-Loop Automation',
     detail:
-      'Apply AI to summarize, classify, and draft operational material while keeping judgment, verification, and final changes with the engineer.',
+      'Apply AI to summarize, classify, draft, and sometimes stage operational work while keeping judgment, verification, and final changes with the engineer.',
   },
 ]
 
 const earlyCareerHighlights = [
-  'More than two decades spanning embedded software, kernel drivers, DRM/security, DOCSIS, CI/CD, Kubernetes, and cloud platform engineering.',
+  'Twenty-five plus years spanning embedded software, kernel drivers, DRM/security, DOCSIS, CI/CD, Kubernetes, cloud platforms, and AI-enabled operations.',
   'Open source contributor with long-running Linux and reproducibility instincts across build, deployment, and systems integration work.',
-  'Hands-on background across C/C++, Python, JavaScript, Golang, GNU make/autotools, and infrastructure automation tooling.',
+  'Hands-on background across C/C++, Python, JavaScript, Go, Java, GNU make/autotools, and infrastructure automation tooling.',
 ]
 
 const heroProofPoints = [
   'Built production infrastructure that teams depended on for years without major redesign.',
   'Turned high-friction secure operations into automation, including a 20+ step FedRAMP workflow.',
-  'Bridge deep embedded systems experience with modern platform engineering, observability, and practical AI.',
+  'Bridge deep embedded systems experience with modern platform engineering, observability, and practical AI-enabled operations.',
 ]
 
 const roleTargets = [
@@ -366,7 +389,7 @@ const roleTargets = [
   },
   {
     title: 'Applied AI for Internal Engineering',
-    detail: 'For organizations that want practical AI automation around runbooks, docs, and repetitive ops without treating AI like magic.',
+    detail: 'For organizations that want practical AI automation around runbooks, docs, repetitive ops, and internal knowledge systems without treating AI like magic.',
   },
 ]
 
@@ -445,7 +468,7 @@ const independentProjects = [
     period: 'AI Infrastructure R&D',
     role: 'Local LLM Systems Lab',
     detail:
-      'Built local AI inference environments on RTX 3090 hardware to evaluate GGUF models, long-context behavior, retrieval quality, and private engineering-assistant workflows.',
+      'Built local AI inference environments on RTX hardware to evaluate GGUF models, long-context behavior, retrieval quality, private engineering-assistant workflows, and agentic development patterns.',
   },
 ]
 
@@ -453,7 +476,9 @@ function App() {
   const [pressedCard, setPressedCard] = useState(null)
   const [selectedCard, setSelectedCard] = useState(ciscoImpactStats[0])
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [runnerToneIndex, setRunnerToneIndex] = useState(0)
   const pressTimeoutRef = useRef(null)
+  const runnerTones = ['runner-tone-blue', 'runner-tone-green', 'runner-tone-yellow']
 
   useEffect(() => {
     return () => {
@@ -470,6 +495,7 @@ function App() {
 
     setPressedCard(label)
     setSelectedCard([...ciscoImpactStats, ...technicalFocusStats].find((item) => item.label === label))
+    setRunnerToneIndex((current) => (current + 1) % runnerTones.length)
     pressTimeoutRef.current = window.setTimeout(() => {
       setPressedCard(null)
       pressTimeoutRef.current = null
@@ -489,9 +515,9 @@ function App() {
             I build critical infrastructure that quietly keeps working.
           </p>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-100 sm:text-lg">
-            Platform engineering technical leader with 20+ years spanning Cisco/Webex, secure CI/CD, Kubernetes, Vault,
-            observability, production databases, and AI-assisted automation. The through-line is durable systems: the kind that
-            reduce toil, survive production pressure, and do not need constant babysitting.
+            Technical leader with 25+ years spanning Cisco/Webex, cloud platforms, secure delivery, observability, production
+            databases, and AI-enabled operations. The through-line is durable systems: the kind that reduce toil, survive
+            production pressure, and do not need constant babysitting.
           </p>
           <div className="mt-5 grid gap-3 lg:grid-cols-3">
             {heroProofPoints.map((item) => (
@@ -607,7 +633,9 @@ function App() {
         </section>
 
         {selectedCard ? (
-          <section className="glass-card p-6 sm:p-8" aria-live="polite">
+          <section className={`glass-card selected-detail-panel ${runnerTones[runnerToneIndex]} p-6 sm:p-8`} aria-live="polite">
+            <span className="selected-detail-panel__runner selected-detail-panel__runner--one" aria-hidden="true" />
+            <span className="selected-detail-panel__runner selected-detail-panel__runner--two" aria-hidden="true" />
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Selected Detail</p>
             <div className="mt-3 grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
               <div className="min-w-0">

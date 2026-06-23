@@ -176,3 +176,86 @@ body {
   outline: 2px solid rgba(252, 165, 165, 0.8);
   outline-offset: 3px;
 }
+
+@keyframes chat-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chat-thinking-spinner {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 9999px;
+  border: 2px solid rgba(103, 232, 249, 0.2);
+  border-top-color: rgba(103, 232, 249, 0.95);
+  border-right-color: rgba(103, 232, 249, 0.72);
+  animation: chat-spinner-rotate 0.8s linear infinite;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+}
+
+.selected-detail-panel {
+  isolation: isolate;
+  overflow: visible;
+  --runner-width: 48px;
+  --runner-height: 5px;
+  --runner-core: rgba(56, 189, 248, 0.98);
+  --runner-fade: rgba(125, 211, 252, 0.2);
+  --runner-shadow: rgba(56, 189, 248, 0.42);
+}
+
+.selected-detail-panel.runner-tone-blue {
+  --runner-core: rgba(56, 189, 248, 0.98);
+  --runner-fade: rgba(125, 211, 252, 0.2);
+  --runner-shadow: rgba(56, 189, 248, 0.42);
+}
+
+.selected-detail-panel.runner-tone-green {
+  --runner-core: rgba(74, 222, 128, 0.98);
+  --runner-fade: rgba(134, 239, 172, 0.18);
+  --runner-shadow: rgba(74, 222, 128, 0.36);
+}
+
+.selected-detail-panel.runner-tone-yellow {
+  --runner-core: rgba(250, 204, 21, 0.98);
+  --runner-fade: rgba(254, 240, 138, 0.18);
+  --runner-shadow: rgba(250, 204, 21, 0.34);
+}
+
+.selected-detail-panel__runner {
+  position: absolute;
+  width: var(--runner-width);
+  height: var(--runner-height);
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--runner-fade), var(--runner-core), var(--runner-fade));
+  box-shadow:
+    0 0 18px var(--runner-shadow),
+    0 0 34px var(--runner-shadow);
+  filter: blur(1.6px);
+  pointer-events: none;
+  z-index: 0;
+  offset-path: inset(0 round 1rem);
+  offset-rotate: auto;
+  animation: selected-detail-runner 17.25s linear infinite;
+}
+
+.selected-detail-panel__runner--two {
+  animation-delay: -8.625s;
+}
+
+@keyframes selected-detail-runner {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.selected-detail-panel > *:not(.selected-detail-panel__runner) {
+  position: relative;
+  z-index: 1;
+}
