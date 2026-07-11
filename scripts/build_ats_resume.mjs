@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
-const outPath = resolve(root, 'public', 'Matthew-Snoby-Resume-ATS.html')
+const outPath = resolve(root, 'public', 'Matthew-Snoby-Resume-SRE.html')
 
 const sections = {
   summary:
@@ -150,10 +150,10 @@ const html = `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Matthew Snoby Resume ATS</title>
+    <title>Matthew Snoby Resume | Senior Site Reliability Engineer</title>
     <style>
       @page {
-        margin: 0.55in 0.65in;
+        margin: 0.5in 0.55in;
         size: letter;
       }
 
@@ -161,13 +161,25 @@ const html = `<!doctype html>
         box-sizing: border-box;
       }
 
+      :root {
+        color-scheme: light;
+        --ink: #13202b;
+        --muted: #5f6b76;
+        --rule: #d7e0e7;
+        --accent: #0f6d87;
+        --accent-soft: #eaf5f8;
+        --panel: #f6f9fb;
+      }
+
       body {
         margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 10.5pt;
-        line-height: 1.28;
-        color: #111111;
-        background: #ffffff;
+        font-family: "Aptos", "Segoe UI", Arial, Helvetica, sans-serif;
+        font-size: 10.2pt;
+        line-height: 1.34;
+        color: var(--ink);
+        background:
+          linear-gradient(180deg, rgba(15, 109, 135, 0.035), rgba(15, 109, 135, 0) 180px),
+          #ffffff;
         font-variant-ligatures: none;
         font-feature-settings: "liga" 0, "clig" 0;
         -webkit-font-smoothing: antialiased;
@@ -177,65 +189,102 @@ const html = `<!doctype html>
         max-width: 100%;
       }
 
+      .hero {
+        padding: 0 0 12px;
+        border-bottom: 2px solid var(--accent);
+        margin-bottom: 12px;
+      }
+
       h1 {
-        margin: 0 0 4px;
-        font-size: 21pt;
-        letter-spacing: 0.02em;
+        margin: 0 0 3px;
+        font-size: 23pt;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        color: #0d1a24;
       }
 
       .subtitle {
-        margin: 0 0 6px;
-        font-size: 12pt;
+        margin: 0 0 8px;
+        font-size: 11.5pt;
         font-weight: 700;
+        color: var(--accent);
       }
 
       .contact {
-        margin: 0 0 10px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 9.5pt;
       }
 
       h2 {
-        margin: 12px 0 5px;
-        padding-bottom: 2px;
-        font-size: 11pt;
-        border-bottom: 1px solid #444444;
+        margin: 14px 0 6px;
+        padding: 5px 8px;
+        font-size: 10.4pt;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-left: 3px solid var(--accent);
       }
 
       p {
         margin: 0 0 4px;
       }
 
+      .lede {
+        margin-bottom: 2px;
+      }
+
+      .skill-cloud {
+        color: #243745;
+      }
+
       .job,
       .project {
-        margin-bottom: 8px;
+        margin-bottom: 9px;
         break-inside: avoid;
       }
 
       .job-header,
       .project-name {
         font-weight: 700;
+        color: #0d1a24;
       }
 
       .job-dates {
         font-style: italic;
+        color: var(--muted);
+        margin-bottom: 4px;
       }
 
       .bullet {
         padding-left: 10px;
         text-indent: -10px;
       }
+
+      .summary-card {
+        background: var(--panel);
+        border: 1px solid var(--rule);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>Matthew Snoby</h1>
-      <p class="subtitle">Technical Leader - Cloud Platforms, Secure Delivery, and AI-Enabled Operations</p>
-      <p class="contact">Roswell, GA | matt.snoby@icloud.com | github.com/snoby | linkedin.com/in/mattsnoby | resume.mattsnoby.com</p>
+      <section class="hero">
+        <h1>Matthew Snoby</h1>
+        <p class="subtitle">Senior Site Reliability Engineer</p>
+        <p class="contact">Roswell, GA | matt.snoby@icloud.com | github.com/snoby | linkedin.com/in/mattsnoby | resume.mattsnoby.com</p>
+      </section>
 
       <h2>Summary</h2>
-      <p>${escapeHtml(sections.summary)}</p>
+      <div class="summary-card">
+        <p class="lede">${escapeHtml(sections.summary)}</p>
+      </div>
 
       <h2>Core Skills</h2>
-      <p>${escapeHtml(sections.coreSkills)}</p>
+      <p class="skill-cloud">${escapeHtml(sections.coreSkills)}</p>
 
       <h2>Skills</h2>
       ${bulletLines(sections.skills)}

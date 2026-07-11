@@ -7,8 +7,8 @@ IMAGE_TAG="${IMAGE_TAG:-latest}"
 REQUIRED_FILES=(
   "public/Matthew-Snoby-Resume.pdf"
   "public/Matthew-Snoby-Resume.docx"
-  "public/Matthew-Snoby-Resume-ATS.html"
-  "public/Matthew-Snoby-Resume-ATS.pdf"
+  "public/Matthew-Snoby-Resume-SRE.html"
+  "public/Matthew-Snoby-Resume-SRE.pdf"
 )
 
 cd "$ROOT"

@@ -39,7 +39,7 @@ Build the website:
 npm run build
 ```
 
-Build the ATS resume HTML and PDF artifacts:
+Build the resume HTML and PDF artifacts:
 
 ```bash
 npm run build:resume
@@ -82,8 +82,8 @@ It also verifies that the static resume download assets exist in `public/` befor
 ```text
 /Matthew-Snoby-Resume.pdf
 /Matthew-Snoby-Resume.docx
-/Matthew-Snoby-Resume-ATS.html
-/Matthew-Snoby-Resume-ATS.pdf
+/Matthew-Snoby-Resume-SRE.html
+/Matthew-Snoby-Resume-SRE.pdf
 ```
 
 The site is available at <http://localhost:8080>. The container health endpoint is available at <http://localhost:8080/healthz>.

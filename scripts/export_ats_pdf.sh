@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-HTML="$ROOT/public/Matthew-Snoby-Resume-ATS.html"
-PDF="$ROOT/public/Matthew-Snoby-Resume-ATS.pdf"
+HTML="$ROOT/public/Matthew-Snoby-Resume-SRE.html"
+PDF="$ROOT/public/Matthew-Snoby-Resume-SRE.pdf"
 
 node "$ROOT/scripts/build_ats_resume.mjs" >/dev/null
 

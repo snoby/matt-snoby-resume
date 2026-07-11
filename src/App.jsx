@@ -8,7 +8,7 @@ const signalCards = [
     value: 'Diagnosis Workflows',
     note: 'Runbook-guided triage with Codex in real operational contexts.',
     detail:
-      'The strongest through-line in the retargeted resume is AI applied to real SRE work: taking paging noise, runbooks, docs, and live cluster context and turning them into faster, more grounded diagnosis.',
+      'This is AI applied to real SRE work: using runbooks, documentation, and live cluster context to make on-call diagnosis faster and better grounded.',
     points: [
       'Used Codex for on-call triage by reviewing runbooks, searching documentation, logging into the paging cluster, and surfacing likely fixes before human action.',
       'Built AI-assisted workflows for operational diagnosis and auto-remediation experiments instead of treating GenAI as slideware.',
@@ -21,7 +21,7 @@ const signalCards = [
     value: 'PostgreSQL Failures',
     note: 'Autovacuum storms, replication breakage, and Patroni failover pressure.',
     detail:
-      'The website now needs to make the minimum SRE requirement visible: real incident response. The independent database platform gives strong proof here because the work involved diagnosis under production pressure, not just greenfield setup.',
+      'This work includes real incident response under production pressure, not just greenfield infrastructure build-out.',
     points: [
       'Diagnosed PostgreSQL production issues including autovacuum storms, replication failures, and failover-sensitive Patroni behavior.',
       'Built the surrounding observability needed to narrow failures quickly rather than debugging blind.',
@@ -30,38 +30,37 @@ const signalCards = [
     evidence: ['Autovacuum incident work', 'Replication troubleshooting', 'Patroni HA operations'],
   },
   {
-    label: 'Independent Stack',
-    value: 'Vipor Reliability',
-    note: 'Full ownership across routing, databases, telemetry, and paging.',
+    label: 'Platform Reliability',
+    value: 'Drone + TFE',
+    note: 'Production CI/CD and delivery systems that stayed stable for years.',
     detail:
-      'Independent infrastructure is one of the clearest differentiators in the updated resume because it shows full-stack ownership without relying on enterprise brand names alone.',
+      'Built and operated durable delivery infrastructure for Webex Logging Metrics, combining CI/CD, infrastructure automation, secrets integration, and day-two reliability.',
     points: [
-      'Built and operate production mining-pool infrastructure across blockchain nodes, stratum services, HAProxy, Nginx, DNS, and Cloudflare.',
-      'Run PostgreSQL 18 with Patroni-managed high availability and no-downtime migrations from RDS to EC2 and then to colocation.',
-      'Own the complete operational loop: metrics, logs, dashboards, alerting, and incident response.',
+      'Designed, implemented, and deployed the Drone CI/CD build system and Terraform Enterprise service for mission-critical builds and deploys.',
+      'Integrated build and deploy workflows with HashiCorp Vault so secrets stayed secured.',
+      'Kept the same architecture in production use for more than five years without major redesign.',
     ],
-    evidence: ['Vipor mining pool', 'PostgreSQL 18 + Patroni', 'RDS -> EC2 -> colocation'],
-    links: [{ label: 'vipor.net', href: 'https://vipor.net' }],
+    evidence: ['Drone CI/CD', 'Terraform Enterprise', 'Vault-backed delivery'],
   },
   {
     label: 'Observability',
-    value: 'Prometheus + Loki',
-    note: 'Metrics, logs, dashboards, alerting, and operational context.',
+    value: 'Logging + Metrics',
+    note: 'Cisco/Webex production observability across Splunk, Grafana, logs, and platform signals.',
     detail:
-      'Observability should read like a first-class SRE competency, not a side skill. The site now leans on the fact that the stack spans collection, storage, dashboards, and alert routing.',
+      'Owned and improved production observability across logging and metrics systems used by Webex teams for investigation, visibility, and day-two operations.',
     points: [
-      'Built Grafana dashboards for pool health, stratum behavior, Loki log streams, and PostgreSQL metrics.',
-      'Run Vector.dev on every stratum host to centralize logs in Loki.',
-      'Monitor hosts and services with Prometheus, then route alerts through Alertmanager to PagerDuty.',
+      'Owned a production Splunk platform serving approximately 300 Webex users for operational search and investigation.',
+      'Built and supported logging, metrics, and dashboard workflows used to diagnose production behavior and platform issues.',
+      'Worked across Grafana, Loki, Prometheus, and related platform signals in both enterprise and independent environments.',
     ],
-    evidence: ['Grafana dashboards', 'Vector.dev -> Loki', 'Prometheus -> Alertmanager -> PagerDuty'],
+    evidence: ['Production Splunk', 'Grafana dashboards', 'Logging + metrics operations'],
   },
   {
     label: 'Secure Delivery',
     value: 'FedRAMP Toil Reduction',
     note: 'Compressed a 20+ step workflow into a tightly controlled automation.',
     detail:
-      'The delivery story still matters, but the framing is now reliability-oriented: reducing error-prone operational toil in a secure environment rather than presenting as pure leadership or platform ownership.',
+      'This work focused on reducing error-prone operational toil in a secure environment without weakening control or auditability.',
     points: [
       'Automated a FedRAMP-secure Kubernetes image update path across transfer, pull, update, deploy, GitOps, JIRA, commit, and merge steps.',
       'Reduced a 20+ step MFA-heavy workflow to enabling the automation and confirming the phone prompt.',
@@ -70,24 +69,24 @@ const signalCards = [
     evidence: ['FedRAMP K8s image path', '20+ steps removed', 'GitOps + JIRA + MFA workflow'],
   },
   {
-    label: 'Algorithms',
-    value: 'Cuckoo Cycle BFS/BFJ',
-    note: 'Independent graph-traversal design, not just infrastructure assembly.',
+    label: 'Secure Platforms',
+    value: 'Vault + Hardening',
+    note: 'Secrets, hardened images, and regulated-environment operational discipline.',
     detail:
-      'The retargeted resume adds an important missing proof point: sound algorithm and data-structure work. The Cuckoo Cycle project shows independent design thinking beyond operations tooling.',
+      'Built secure platform foundations around secrets management, hardened images, and operational controls needed for reliable delivery in sensitive environments.',
     points: [
-      'Designed and tuned graph-traversal approaches for Cuckoo Cycle mining, including BFS/BFJ-oriented search behavior under real performance constraints.',
-      'Improved throughput through benchmark-driven algorithm changes, CPU affinity, NUMA placement, compiler tuning, and low-level profiling.',
-      'Used the project to demonstrate hands-on reasoning about data flow, search strategy, and systems performance.',
+      'Designed Vault hierarchies, roles, and policies for CI, development, staging, and production workflows.',
+      'Led Ubuntu 20.04-to-24.04 hardening, Duo SSH enablement, and hardened-image migrations across AWS and OpenStack/3AZ environments.',
+      'Kept secure delivery and platform changes operable under real compliance and production constraints.',
     ],
-    evidence: ['Graph traversal design', 'Ryzen + EPYC optimization', 'Benchmark-driven algorithm work'],
+    evidence: ['Vault roles and policies', 'Ubuntu hardening', 'AWS and OpenStack/3AZ'],
   },
   {
     label: 'LLM Systems',
     value: 'Private Ops Context',
     note: 'Local inference for sensitive engineering and operations workflows.',
     detail:
-      'AI on the site should stay grounded in operating reality. The local-model work supports the SRE story because it keeps sensitive infrastructure context private while enabling faster analysis.',
+      'The local-model work keeps sensitive infrastructure context private while still enabling faster analysis and operational support.',
     points: [
       'Run Qwen local inference stacks with llama.cpp, GGUF quantization, speculative decoding, long context, and tuned KV-cache behavior.',
       'Evaluate models against coding and operations workflows rather than generic chatbot tasks.',
@@ -112,7 +111,8 @@ const signalCards = [
 ]
 
 const heroProofPoints = [
-  'Hands-on SRE framing instead of a leadership-title-first pitch.',
+  '22 years at Cisco spanning embedded systems, platform engineering, observability, and secure delivery.',
+  'Hands-on site reliability and platform engineering experience.',
   'Real on-call and incident-management evidence, not just platform build-out.',
   'Independent production systems that prove ownership across the whole reliability loop.',
 ]
@@ -174,10 +174,10 @@ const skills = {
 
 const featuredProjects = [
   {
-    title: 'Vipor Mining Pool / Reliability Platform',
+    title: 'Cisco / Webex Observability and Logging',
     summary:
-      'Operates revenue-critical infrastructure spanning blockchain nodes, routing, PostgreSQL HA, centralized logging, metrics, alerting, and incident response.',
-    stack: 'PostgreSQL 18, Patroni, HAProxy, Nginx, Vector.dev, Loki, Prometheus, Grafana, PagerDuty',
+      'Owned and improved production logging, metrics, dashboards, and investigation workflows used by Webex teams to understand platform health and diagnose production issues.',
+    stack: 'Splunk, Grafana, Loki, Prometheus, logging pipelines, metrics workflows, production operations',
   },
   {
     title: 'AI-Assisted SRE Workflows',
@@ -192,10 +192,10 @@ const featuredProjects = [
     stack: 'Kubernetes, GitOps, JIRA, MFA, secure delivery, operational automation',
   },
   {
-    title: 'Cuckoo Cycle Algorithm R&D',
+    title: 'Vipor Mining Pool / Reliability Platform',
     summary:
-      'Independent performance work combining BFS/BFJ graph traversal design, low-level profiling, CPU affinity, NUMA tuning, and benchmark-driven optimization.',
-    stack: 'Algorithms, graph traversal, NUMA, CPU affinity, profiling, systems optimization',
+      'Operates revenue-critical infrastructure spanning blockchain nodes, routing, PostgreSQL HA, centralized logging, metrics, alerting, and incident response.',
+    stack: 'PostgreSQL 18, Patroni, HAProxy, Nginx, Vector.dev, Loki, Prometheus, Grafana, PagerDuty',
   },
 ]
 
@@ -204,7 +204,7 @@ const experience = [
     period: 'September 2010 - Present',
     role: 'Cisco / Webex - Cloud Engineering Technical Leader',
     detail:
-      'Official title aside, the relevant story here is senior IC reliability and platform work: secure delivery, observability, operational automation, and production support under real constraints.',
+      '22 years at Cisco / Webex across embedded systems, cloud platforms, observability, secure delivery, and senior hands-on reliability work under real production constraints.',
     bullets: [
       'Built AI-assisted workflows for on-call diagnosis and auto-remediation experiments, combining runbooks, documentation, and operational context to reduce manual troubleshooting effort.',
       'Built automations for a FedRAMP-secure Kubernetes image update workflow, compressing a 20+ step GitOps, JIRA, and MFA-heavy process into a single confirmation step.',
@@ -232,7 +232,7 @@ const experience = [
     period: 'Infrastructure R&D',
     role: 'Cuckoo Cycle Performance Engineering',
     detail:
-      'Algorithm and systems work that makes data-structure fluency visible instead of leaving the resume looking purely operational.',
+      'Algorithm and systems work that complements the broader operations and infrastructure background.',
     bullets: [
       'Built the world-fastest CPU miner for the Cuckoo algorithm through benchmark-driven systems optimization.',
       'Designed and tuned BFS/BFJ-style graph-traversal behavior under performance constraints, then improved execution with profiling, compiler tuning, CPU affinity, and NUMA placement.',
@@ -269,16 +269,33 @@ const operatingModel = [
   },
 ]
 
+const linkedinArticles = [
+  {
+    title: 'How AI Enabled a Computer Engineer to Install a Home Solar System',
+    summary:
+      'A practical writeup showing how AI can be used as an engineering copilot in a real-world physical systems project instead of a toy demo.',
+    href: 'https://www.linkedin.com/pulse/how-ai-enabled-computer-engineer-install-home-solar-system-matt-snoby-jgzoe/?trackingId=cpydaxv%2FJ%2BXDHCbtt4vqxQ%3D%3D',
+    label: 'Read on LinkedIn',
+  },
+  {
+    title: "How I Built the World's Fastest CPU Cuckoo Cycle Miner",
+    summary:
+      'A performance-engineering article covering affinity, NUMA tuning, compiler work, profiling, and benchmark-driven optimization.',
+    href: 'https://www.linkedin.com/pulse/how-i-built-worlds-fastest-cpu-cuckoo-cycle-miner-what-matt-snoby-zeabc/',
+    label: 'Read on LinkedIn',
+  },
+]
+
 const contactLinks = [
   {
-    label: 'Download ATS Resume',
-    href: '/Matthew-Snoby-Resume-ATS.pdf',
+    label: 'Download Resume PDF',
+    href: '/Matthew-Snoby-Resume-SRE.pdf',
     className:
       'rounded-lg border border-cyan-300/40 bg-cyan-300/15 px-4 py-2 font-mono text-xs uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/25',
   },
   {
-    label: 'View ATS HTML',
-    href: '/Matthew-Snoby-Resume-ATS.html',
+    label: 'View Resume HTML',
+    href: '/Matthew-Snoby-Resume-SRE.html',
     className:
       'rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/20',
   },
@@ -345,9 +362,9 @@ function App() {
             I build and operate systems that stay calm when production does not.
           </p>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-100 sm:text-lg">
-            Hands-on infrastructure engineer focused on site reliability, observability, incident response, secure delivery, and
-            AI-assisted operations. The through-line is practical ownership: understand the failure mode, instrument the system,
-            reduce the toil, and keep the result operable.
+            Hands-on infrastructure engineer with 22 years at Cisco / Webex, focused on site reliability, observability,
+            incident response, secure delivery, and AI-assisted operations. The through-line is practical ownership:
+            understand the failure mode, instrument the system, reduce the toil, and keep the result operable.
           </p>
           <div className="mt-5 grid gap-3 lg:grid-cols-3">
             {heroProofPoints.map((item) => (
@@ -359,7 +376,7 @@ function App() {
           <div className="mt-5 max-w-3xl rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200/90">Best Fit</p>
             <p className="mt-2 text-sm leading-relaxed text-slate-100 sm:text-base">
-              Senior IC SRE and platform roles that value production judgment, strong observability habits, careful automation,
+              Senior SRE and platform roles that value production judgment, strong observability habits, careful automation,
               and grounded use of AI in operations.
             </p>
           </div>
@@ -473,7 +490,7 @@ function App() {
         <section className="glass-card p-6 sm:p-8">
           <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Skills Matrix</h2>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
-            Reorganized to mirror the targeted SRE resume instead of the earlier general-purpose profile.
+            Organized around the core areas most relevant to site reliability and platform engineering work.
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(skills).map(([group, items]) => (
@@ -538,11 +555,34 @@ function App() {
           </div>
         </section>
 
+        <section className="glass-card p-6 sm:p-8">
+          <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">LinkedIn Articles</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+            A few longer-form writeups that show how I explain technical work, think through systems problems, and document hands-on projects.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {linkedinArticles.map((article) => (
+              <article key={article.href} className="glass-subcard p-4">
+                <h3 className="text-base font-semibold text-white">{article.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{article.summary}</p>
+                <a
+                  href={article.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex rounded-md border border-cyan-300/30 bg-cyan-300/15 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/25"
+                >
+                  {article.label}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section id="resume" className="glass-card p-6 sm:p-8">
           <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">Resume & Contact</h2>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
-            This site now tracks the retargeted Senior Site Reliability Engineer version of the resume rather than the broader
-            technical-leader framing.
+            Download the current resume package and reach out directly for site reliability, platform engineering, and
+            infrastructure roles.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             {contactLinks.map((link) => (
