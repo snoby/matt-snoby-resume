@@ -213,7 +213,7 @@ def build():
 
     add_section_heading(doc, "Selected Impact")
     impact = [
-        ("AI & Knowledge Systems", "Built Codex-assisted FedRAMP workflows and on-call triage; designed and operate DIP, a FastAPI document ingestion and hybrid retrieval platform using Qdrant, SQLite FTS5, reranking, and cited answers."),
+        ("AI & Knowledge Systems", "Built Codex-assisted FedRAMP workflows and on-call triage; designed and operate DIP as a personal FastAPI document ingestion and hybrid retrieval platform using Qdrant, SQLite FTS5, reranking, and cited answers."),
         ("Reliable Developer Platforms", "Designed and operated Drone CI/CD, Terraform Enterprise, Vault-backed secrets, hardened build images, and GitOps workflows supporting mission-critical Webex engineering."),
         ("Production Operations", "Owned a Splunk platform serving about 300 Webex users and run mining infrastructure with Prometheus, Grafana, Loki, PagerDuty, and PostgreSQL 18 Patroni high availability."),
     ]
@@ -243,7 +243,7 @@ def build():
         "Sep 2010 - Present",
         "Technical leadership across AI-assisted infrastructure, cloud platforms, secure build systems, observability, DRM, and embedded architecture.",
         [
-            "Designed, built, deployed, and operate DIP, converting mixed office documents into searchable engineering knowledge with parallel conversion, SHA256 deduplication, sentence-aware chunking, batched embeddings, Qdrant vectors, SQLite FTS5, hybrid retrieval, reranking, and cited answer generation.",
+            "Designed, built, deployed, and operate DIP as a personal project, converting mixed office documents into searchable engineering knowledge with parallel conversion, SHA256 deduplication, sentence-aware chunking, batched embeddings, Qdrant vectors, SQLite FTS5, hybrid retrieval, reranking, and cited answer generation.",
             "Built Codex automations for a FedRAMP-secure Kubernetes image update workflow, reducing a 20+ step GitOps/JIRA/MFA-heavy process to enabling the automation and confirming MFA; also applied Codex to runbook-guided on-call investigation.",
             "Designed and deployed Drone CI/CD and Terraform Enterprise for Webex Logging Metrics, integrated build and deployment secrets with HashiCorp Vault, and maintained the architecture in production for more than five years without major redesign.",
             "Designed Vault hierarchies, roles, and hand-written policies for CI, development, staging, and production; advised a team implementing GitHub Actions on secrets, images, reliability, deployment flow, and day-two operations.",

@@ -7,6 +7,11 @@
     "dev": "vite",
     "dev:local-api": "VITE_RESUME_API_BASE_URL=http://10.0.0.85:8000 vite --host 0.0.0.0",
     "build": "vite build",
+    "build:site": "vite build",
+    "build:resume:html": "node scripts/build_ats_resume.mjs",
+    "build:resume:pdf": "bash scripts/export_ats_pdf.sh",
+    "build:resume": "npm run build:resume:pdf",
+    "build:all": "npm run build:site && npm run build:resume",
     "lint": "eslint .",
     "preview": "vite preview"
   },

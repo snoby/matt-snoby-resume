@@ -31,12 +31,32 @@ Optional overrides:
 API_BASE_URL=http://10.0.0.85:8000 HOST_PORT=8081 ./scripts/run-local-docker.sh
 ```
 
+## Build commands
+
+Build the website:
+
+```bash
+npm run build
+```
+
+Build the ATS resume HTML and PDF artifacts:
+
+```bash
+npm run build:resume
+```
+
+Build both the website and resume artifacts together:
+
+```bash
+npm run build:all
+```
+
 ## Production container
 
 Build and start the site:
 
 ```bash
-docker build -t matt-snoby-resume:latest .
+./build.sh
 docker run -d \
   --name matt-snoby-resume \
   --restart unless-stopped \
@@ -46,7 +66,24 @@ docker run -d \
   --tmpfs /var/cache/nginx \
   --tmpfs /var/run \
   -p 8080:8080 \
-  matt-snoby-resume:latest
+  iotapi322/resume:latest
+```
+
+Override the image tag if needed:
+
+```bash
+IMAGE_TAG=dev ./build.sh
+```
+
+`./build.sh` follows the same local sequence as `.drone.yml`: `npm ci --no-audit --no-fund`, `npm run lint`, `npm run build`, then `docker build`.
+
+It also verifies that the static resume download assets exist in `public/` before building the container, so the reverse-proxied site will serve:
+
+```text
+/Matthew-Snoby-Resume.pdf
+/Matthew-Snoby-Resume.docx
+/Matthew-Snoby-Resume-ATS.html
+/Matthew-Snoby-Resume-ATS.pdf
 ```
 
 The site is available at <http://localhost:8080>. The container health endpoint is available at <http://localhost:8080/healthz>.
